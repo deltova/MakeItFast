@@ -1,8 +1,11 @@
 #! /usr/bin/python
 from random import randint
 import time
+import sys
+sys.path.append("../wrapper/build/lib.linux-x86_64-3.7")
+from twitter import Twitter
 
-class Twitter:
+class TwitterRef:
     def __init__(self):
         self.tweetMap = {}
         self.users = {}
@@ -43,16 +46,19 @@ class Twitter:
 
 class Wrapper:
     def __init__(self):
+        self.twitterRef = TwitterRef()
         self.twitter = Twitter()
     def exec(self, input):
         if input[0] == 3:
-            return self.twitter.getNewsFeed(input[1])
+            return self.twitter.getNewsFeed(input[1]), self.twitterRef.getNewsFeed(input[1])
         elif input[0] == 0:
             self.twitter.follow(input[1], input[2])
+            self.twitterRef.follow(input[1], input[2])
         elif input[0] == 1:
             self.twitter.unfollow(input[1], input[2])
+            self.twitterRef.unfollow(input[1], input[2])
         elif input[0] == 2:
-            self.twitter.postTweet(input[1], input[2])
+            self.twitterRef.postTweet(input[1], input[2])
 
 
 def generate_array(nbAction):
@@ -66,10 +72,11 @@ def generate_array(nbAction):
     return res
 
 def test():
-    bin1 = Wrapper()
+    wrapper = Wrapper()
     for action in generate_array(100000):
         if action[0] == 3:
-            bin1.exec(action)
+            res = wrapper.exec(action)
+            assert(res[0] == res[1])
         else:
-            bin1.exec(action)
+            wrapper.exec(action)
 test()
