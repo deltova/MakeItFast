@@ -1,0 +1,3 @@
+run test suite with make check
+implement the c++ solution
+add benchmarking tool
