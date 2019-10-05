@@ -6,7 +6,7 @@
 struct Twitt
 {
     unsigned int id;
-    time_t timestamp;
+    std::time_t timestamp;
 };
 
 class Twitter

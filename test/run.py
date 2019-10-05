@@ -82,7 +82,11 @@ def test():
     for action in generate_array(100000):
         if action[0] == 3:
             res = wrapper.exec(action)
-            assert(res[0] == res[1])
+            ref = res[1]
+            tested = [elm for elm in res[0]]
+            if ref != tested:
+                import pdb; pdb.set_trace()
+            assert ref == tested, (ref, tested)
         else:
             wrapper.exec(action)
 test()
