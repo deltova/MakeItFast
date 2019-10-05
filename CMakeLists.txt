@@ -4,11 +4,21 @@ SET(TWITTER "Twitter")
 set(CMAKE_CXX_STANDARD 17)
 PROJECT(${TWITTER} CXX)
 
+set(CMAKE_CURRENT_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
+message("tamer: " ${CMAKE_CURRENT_SOURCE_DIR})
 add_library(${TWITTER} SHARED src/twitter.cc)
 add_compile_options("-std=c++17" "-pedantic" "-Wall" "-Wextra")
 
-add_executable(${TWITTER}_test test/test.cc)
-target_include_directories(${TWITTER}_test PUBLIC src)
-target_link_libraries(${TWITTER}_test PUBLIC ${TWITTER})
-add_subdirectory(wrapper)
-add_subdirectory(test)
+execute_process(COMMAND cling-config --cmake OUTPUT_VARIABLE CPPYY_MODULE_PATH OUTPUT_STRIP_TRAILING_WHITESPACE)
+message("CPYY_MODULE_PATH: " ${CPPYY_MODULE_PATH})
+list(INSERT CMAKE_MODULE_PATH 0 ${CPPYY_MODULE_PATH})
+find_package(Cppyy)
+cppyy_add_bindings(
+    "twitwi" "0.0.1" "Clement" "clementmagnard3@gmail.com"
+    LANGUAGE_STANDARD "17"
+    GENERATE_OPTIONS ""
+    INCLUDE_DIRS    ${CMAKE_CURRENT_SOURCE_DIR}
+    LINK_LIBRARIES 
+    H_DIRS  ${CMAKE_CURRENT_SOURCE_DIR} 
+    H_FILES "twitter.hh")
+

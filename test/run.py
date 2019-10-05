@@ -1,9 +1,15 @@
 #! /usr/bin/python
+BUILD_PATH = "../build/"
+LIBNAME = "libTwitter.so"
+import sys
+sys.path.append(BUILD_PATH)
+import ctypes
+import os
+ctypes.CDLL(BUILD_PATH + LIBNAME, mode=os.RTLD_LAZY) 
+from twitwi import Twitter
+
 from random import randint
 import time
-import sys
-sys.path.append("../wrapper/build/lib.linux-x86_64-3.7")
-from twitter import Twitter
 
 class TwitterRef:
     def __init__(self):
