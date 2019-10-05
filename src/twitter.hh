@@ -6,7 +6,7 @@
 struct Twitt
 {
     unsigned int id;
-    std::time_t timestamp;
+    unsigned long long timestamp;
 };
 
 class Twitter
@@ -18,6 +18,8 @@ class Twitter
     std::vector<unsigned int> getNewsFeed(unsigned int followee);
 
   private:
+    void dump_state();
     std::map<unsigned int, std::vector<unsigned int>> users_;
     std::map<unsigned int, std::vector<Twitt>> tweet_map_;
+    unsigned long long stamp = 0;
 };

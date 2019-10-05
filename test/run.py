@@ -65,6 +65,7 @@ class Wrapper:
             self.twitterRef.unfollow(input[1], input[2])
         elif input[0] == 2:
             self.twitterRef.postTweet(input[1], input[2])
+            self.twitter.postTweet(input[1], input[2])
 
 
 def generate_array(nbAction):
