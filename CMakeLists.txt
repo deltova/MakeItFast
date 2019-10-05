@@ -22,3 +22,4 @@ cppyy_add_bindings(
     H_DIRS  ${CMAKE_CURRENT_SOURCE_DIR} 
     H_FILES "twitter.hh")
 
+add_subdirectory(test)
