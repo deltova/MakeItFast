@@ -32,34 +32,34 @@ void Twitter::postTweet(unsigned int userid, unsigned int tweetid)
     }
     tweet_map_[userid].insert(tweet_map_[userid].begin(), Twitt{tweetid, stamp});
     stamp++;
-    std::cout << "PostTweet " << userid << " " << tweetid << "\n";
-    dump_state();
 }
 
 void Twitter::follow(unsigned int followee, unsigned int follower)
 {
+    if (followee == follower)
+        return;
     if (users_.find(followee) == users_.end())
     {
         users_[followee] = std::vector<unsigned int>();
     }
-    users_[followee].push_back(follower);
-    std::cout << "follow " << followee << " " << follower << "\n";
-    dump_state();
+    auto& followers = users_[followee];
+    if (std::find(followers.begin(), followers.end(), follower) == followers.end())
+        users_[followee].push_back(follower);
 }
 
 void Twitter::unfollow(unsigned int followee, unsigned int follower)
 {
+    if (followee == follower)
+        return;
     auto followersIter = users_.find(followee);
     if (followersIter == users_.end())
         return;
-    auto followers = followersIter->second;
+    auto& followers = followersIter->second;
     auto followerIt = std::find(followers.begin(), followers.end(), follower);
     if (followerIt != followers.end())
     {
         followers.erase(followerIt);
     }
-    std::cout << "unfollow " << followee << " " << follower << "\n";
-    dump_state();
 }
 
 std::vector<unsigned int> Twitter::getNewsFeed(unsigned int userid)

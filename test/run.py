@@ -8,6 +8,7 @@ import os
 ctypes.CDLL(BUILD_PATH + LIBNAME, mode=os.RTLD_LAZY) 
 from twitwi import Twitter
 
+import json
 from random import randint
 import time
 
@@ -78,9 +79,13 @@ def generate_array(nbAction):
             res.append((action, randint(0, 100), randint(0, 100)))
     return res
 
-def test():
+def test(actions=None):
     wrapper = Wrapper()
-    for action in generate_array(100000):
+    if actions is None:
+        actions = generate_array(100000)
+    with open("actions", "w") as f:
+        json.dump(actions, f)
+    for action in actions:
         if action[0] == 3:
             res = wrapper.exec(action)
             ref = res[1]
@@ -90,4 +95,10 @@ def test():
             assert ref == tested, (ref, tested)
         else:
             wrapper.exec(action)
-test()
+if __name__ == "__main__":
+    if len(sys.argv) > 1:
+        with open(sys.argv[1], "r") as f:
+            actions = json.load(f)
+            test(actions)
+    else:
+        test()
