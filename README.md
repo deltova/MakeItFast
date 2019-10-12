@@ -16,6 +16,7 @@ To begin with this project you just could clone it from github.
 
 To make it work you need:
 - cppyy `pip install cppyy`
+- Google BenchMark(archlinux: `yaourt -S benchmark`)
 
 ### Installing
 
