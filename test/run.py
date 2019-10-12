@@ -102,3 +102,4 @@ if __name__ == "__main__":
             test(actions)
     else:
         test()
+    print("All generated tests passed")
