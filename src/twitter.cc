@@ -4,26 +4,6 @@
 #include <iostream>
 #include <thread>
 
-void Twitter::dump_state()
-{
-    std::cout << "Tweets:\n";
-    for (auto& tweetsById : tweet_map_)
-    {
-        std::cout << tweetsById.first << " : ";
-        for (auto& tweets : tweetsById.second)
-            std::cout << "(" << tweets.id << "," << tweets.timestamp << ")"
-                      << ", ";
-        std::cout << "\n";
-    }
-    std::cout << "Users:\n";
-    for (auto& followerByUser : users_)
-    {
-        std::cout << followerByUser.first << " : ";
-        for (auto& follower : followerByUser.second)
-            std::cout << follower << ", ";
-        std::cout << "\n";
-    }
-}
 void Twitter::postTweet(unsigned int userid, unsigned int tweetid)
 {
     if (tweet_map_.find(userid) == tweet_map_.end())
@@ -91,4 +71,25 @@ std::vector<unsigned int> Twitter::getNewsFeed(unsigned int userid)
         finalRes.push_back(it->id);
     }
     return finalRes;
+}
+
+void Twitter::dump_state()
+{
+    std::cout << "Tweets:\n";
+    for (auto& tweetsById : tweet_map_)
+    {
+        std::cout << tweetsById.first << " : ";
+        for (auto& tweets : tweetsById.second)
+            std::cout << "(" << tweets.id << "," << tweets.timestamp << ")"
+                      << ", ";
+        std::cout << "\n";
+    }
+    std::cout << "Users:\n";
+    for (auto& followerByUser : users_)
+    {
+        std::cout << followerByUser.first << " : ";
+        for (auto& follower : followerByUser.second)
+            std::cout << follower << ", ";
+        std::cout << "\n";
+    }
 }

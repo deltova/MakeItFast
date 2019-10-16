@@ -21,10 +21,10 @@ auto parseActions()
 
 static void BM_WholeBench(benchmark::State& state)
 {
-    while (state.KeepRunning())
+    auto actions = parseActions();
+    for (auto _ : state)
     {
         Twitter twitter = Twitter();
-        auto actions = parseActions();
         for (const auto& action : actions)
         {
             if (action[0] == 0)

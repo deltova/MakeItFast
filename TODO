@@ -1,3 +1,2 @@
-add benchmarking tool
 add a github action that run the testsuite when pushing
 add libasan in the cmake
