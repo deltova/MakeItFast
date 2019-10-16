@@ -60,11 +60,15 @@ std::vector<unsigned int> Twitter::getNewsFeed(unsigned int userid)
             {
                 auto tweets = tweet_map_[follow];
                 auto end = tweets.size() > 10 ? tweets.begin() + 10 : tweets.end();
+                auto previous_size = res.size();
                 res.insert(res.end(), tweets.begin(), end);
+                std::inplace_merge(res.begin(), res.begin() + previous_size, res.end(),
+                                   [](Twitt a, Twitt b) { return a.timestamp > b.timestamp; });
+                auto new_end = res.size() > 10 ? res.begin() + 10 : res.end();
+                res = std::vector(res.begin(), new_end);
             }
         }
     }
-    std::sort(res.begin(), res.end(), [](Twitt a, Twitt b) { return a.timestamp > b.timestamp; });
     std::vector<unsigned int> finalRes = {};
     for (auto it = res.begin(); it != res.begin() + 10 && it != res.end(); it++)
     {
