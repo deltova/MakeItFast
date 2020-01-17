@@ -3,6 +3,7 @@
 #include <chrono>
 #include <iostream>
 #include <thread>
+#include <queue>
 
 void Twitter::postTweet(unsigned int userid, unsigned int tweetid)
 {
@@ -42,37 +43,45 @@ void Twitter::unfollow(unsigned int followee, unsigned int follower)
     }
 }
 
+struct QueueCmp{
+    bool operator()(Twitt &s1,Twitt &s2){
+            return s1.timestamp<s2.timestamp;
+}
+};
 std::vector<unsigned int> Twitter::getNewsFeed(unsigned int userid)
 {
-    std::vector<Twitt> res;
+    std::priority_queue<Twitt, std::vector<Twitt>, QueueCmp> res;
     if (tweet_map_.find(userid) != tweet_map_.end())
     {
-        auto ownTweet = tweet_map_[userid];
+        auto &ownTweet = tweet_map_[userid];
         auto end = ownTweet.size() > 10 ? ownTweet.begin() + 10 : ownTweet.end();
-        res = std::vector<Twitt>(ownTweet.begin(), end);
+        for (auto it = ownTweet.begin(); it !=  end; ++it)
+        {
+            res.push(*it);
+        }
     }
     if (users_.find(userid) != users_.end())
     {
-        std::vector<unsigned int> following = users_[userid];
+        std::vector<unsigned int> &following = users_[userid];
         for (auto follow : following)
         {
             if (tweet_map_.find(follow) != tweet_map_.end())
             {
-                auto tweets = tweet_map_[follow];
+                auto &tweets = tweet_map_[follow];
                 auto end = tweets.size() > 10 ? tweets.begin() + 10 : tweets.end();
-                auto previous_size = res.size();
-                res.insert(res.end(), tweets.begin(), end);
-                std::inplace_merge(res.begin(), res.begin() + previous_size, res.end(),
-                                   [](Twitt a, Twitt b) { return a.timestamp > b.timestamp; });
-                auto new_end = res.size() > 10 ? res.begin() + 10 : res.end();
-                res = std::vector(res.begin(), new_end);
+                for (auto it = tweets.begin(); it !=  end; ++it)
+                {
+                    res.push(*it);
+                }
             }
         }
     }
-    std::vector<unsigned int> finalRes = {};
-    for (auto it = res.begin(); it != res.begin() + 10 && it != res.end(); it++)
+    std::vector<unsigned int> finalRes; 
+    while (finalRes.size() < 10 && !res.empty())
     {
-        finalRes.push_back(it->id);
+        auto top = res.top();
+        finalRes.push_back(top.id);
+        res.pop();
     }
     return finalRes;
 }

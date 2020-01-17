@@ -1,6 +1,6 @@
 #pragma once
 #include <ctime>
-#include <map>
+#include <unordered_map>
 #include <vector>
 
 struct Twitt
@@ -19,7 +19,7 @@ class Twitter
 
   private:
     void dump_state();
-    std::map<unsigned int, std::vector<unsigned int>> users_;
-    std::map<unsigned int, std::vector<Twitt>> tweet_map_;
+    std::unordered_map<unsigned int, std::vector<unsigned int>> users_;
+    std::unordered_map<unsigned int, std::vector<Twitt>> tweet_map_;
     unsigned long long stamp = 0;
 };
