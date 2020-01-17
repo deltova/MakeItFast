@@ -15,7 +15,7 @@ class Twitter
     void postTweet(unsigned int userid, unsigned int tweetid);
     void follow(unsigned int followee, unsigned int follower);
     void unfollow(unsigned int followee, unsigned int follower);
-    std::vector<unsigned int> getNewsFeed(unsigned int followee);
+    std::vector<unsigned int> &getNewsFeed(unsigned int followee);
 
   private:
     void dump_state();

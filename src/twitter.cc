@@ -48,7 +48,8 @@ struct QueueCmp{
             return s1.timestamp<s2.timestamp;
 }
 };
-std::vector<unsigned int> Twitter::getNewsFeed(unsigned int userid)
+
+std::vector<unsigned int> &Twitter::getNewsFeed(unsigned int userid)
 {
     std::priority_queue<Twitt, std::vector<Twitt>, QueueCmp> res;
     if (tweet_map_.find(userid) != tweet_map_.end())
