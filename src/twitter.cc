@@ -10,6 +10,12 @@ void Twitter::postTweet(unsigned int userid, unsigned int tweetid)
     if (tweet_map_.find(userid) == tweet_map_.end())
     {
         tweet_map_[userid] = std::vector<Twitt>();
+        // follow itself
+        if (users_.find(userid) == users_.end())
+            users_[userid] = std::vector<unsigned int>({userid});
+        else
+            if (std::find(users_[userid].begin(), users_[userid].end(), userid) == users_[userid].end())
+                users_[userid].push_back(userid);
     }
     tweet_map_[userid].insert(tweet_map_[userid].begin(), Twitt{tweetid, stamp});
     stamp++;
@@ -49,18 +55,9 @@ struct QueueCmp{
 }
 };
 
-std::vector<unsigned int> &Twitter::getNewsFeed(unsigned int userid)
+std::vector<unsigned int> Twitter::getNewsFeed(unsigned int userid)
 {
     std::priority_queue<Twitt, std::vector<Twitt>, QueueCmp> res;
-    if (tweet_map_.find(userid) != tweet_map_.end())
-    {
-        auto &ownTweet = tweet_map_[userid];
-        auto end = ownTweet.size() > 10 ? ownTweet.begin() + 10 : ownTweet.end();
-        for (auto it = ownTweet.begin(); it !=  end; ++it)
-        {
-            res.push(*it);
-        }
-    }
     if (users_.find(userid) != users_.end())
     {
         std::vector<unsigned int> &following = users_[userid];
