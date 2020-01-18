@@ -49,25 +49,20 @@ void Twitter::unfollow(unsigned int followee, unsigned int follower)
     }
 }
 
-struct QueueCmp{
-    bool operator()(Twitt &s1,Twitt &s2){
-            return s1.timestamp<s2.timestamp;
-}
-};
 
 std::vector<unsigned int> Twitter::getNewsFeed(unsigned int userid)
 {
-    std::priority_queue<Twitt, std::vector<Twitt>, QueueCmp> res;
+    auto cmp = [](Twitt left, Twitt right){return left.timestamp < right.timestamp;};
+    std::priority_queue<Twitt, std::vector<Twitt>, decltype(cmp)> res(cmp);
     if (users_.find(userid) != users_.end())
     {
-        std::vector<unsigned int> &following = users_[userid];
-        for (auto follow : following)
+        for (auto follow : users_[userid])
         {
             if (tweet_map_.find(follow) != tweet_map_.end())
             {
                 auto &tweets = tweet_map_[follow];
                 auto end = tweets.size() > 10 ? tweets.begin() + 10 : tweets.end();
-                for (auto it = tweets.begin(); it !=  end; ++it)
+                for (auto it = tweets.begin(); it != end; ++it)
                 {
                     res.push(*it);
                 }
