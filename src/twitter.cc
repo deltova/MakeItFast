@@ -5,19 +5,19 @@
 #include <thread>
 #include <queue>
 
-void Twitter::postTweet(unsigned int userid, unsigned int tweetid)
+void Twitter::postTweet(unsigned int user_id, unsigned int tweet_id)
 {
-    if (tweet_map_.find(userid) == tweet_map_.end())
+    if (tweet_map_.find(user_id) == tweet_map_.end())
     {
-        tweet_map_[userid] = std::vector<Twitt>();
+        tweet_map_[user_id] = std::vector<Twitt>();
         // follow itself
-        if (users_.find(userid) == users_.end())
-            users_[userid] = std::vector<unsigned int>({userid});
+        if (users_.find(user_id) == users_.end())
+            users_[user_id] = std::vector<unsigned int>({user_id});
         else
-            if (std::find(users_[userid].begin(), users_[userid].end(), userid) == users_[userid].end())
-                users_[userid].push_back(userid);
+            if (std::find(users_[user_id].begin(), users_[user_id].end(), user_id) == users_[user_id].end())
+                users_[user_id].push_back(user_id);
     }
-    tweet_map_[userid].insert(tweet_map_[userid].begin(), Twitt{tweetid, stamp});
+    tweet_map_[user_id].insert(tweet_map_[user_id].begin(), Twitt{tweet_id, stamp});
     stamp++;
 }
 
@@ -38,25 +38,25 @@ void Twitter::unfollow(unsigned int followee, unsigned int follower)
 {
     if (followee == follower)
         return;
-    auto followersIter = users_.find(followee);
-    if (followersIter == users_.end())
+    auto followers_iter = users_.find(followee);
+    if (followers_iter == users_.end())
         return;
-    auto& followers = followersIter->second;
-    auto followerIt = std::find(followers.begin(), followers.end(), follower);
-    if (followerIt != followers.end())
+    auto& followers = followers_iter->second;
+    auto followers_it = std::find(followers.begin(), followers.end(), follower);
+    if (followers_it != followers.end())
     {
-        followers.erase(followerIt);
+        followers.erase(followers_it);
     }
 }
 
 
-std::vector<unsigned int> Twitter::getNewsFeed(unsigned int userid)
+std::vector<unsigned int> Twitter::getNewsFeed(unsigned int user_id)
 {
     auto cmp = [](Twitt left, Twitt right){return left.timestamp < right.timestamp;};
     std::priority_queue<Twitt, std::vector<Twitt>, decltype(cmp)> res(cmp);
-    if (users_.find(userid) != users_.end())
+    if (users_.find(user_id) != users_.end())
     {
-        for (auto follow : users_[userid])
+        for (auto follow : users_[user_id])
         {
             if (tweet_map_.find(follow) != tweet_map_.end())
             {
@@ -69,32 +69,32 @@ std::vector<unsigned int> Twitter::getNewsFeed(unsigned int userid)
             }
         }
     }
-    std::vector<unsigned int> finalRes; 
-    while (finalRes.size() < 10 && !res.empty())
+    std::vector<unsigned int> final_res; 
+    while (final_res.size() < 10 && !res.empty())
     {
         auto top = res.top();
-        finalRes.push_back(top.id);
+        final_res.push_back(top.id);
         res.pop();
     }
-    return finalRes;
+    return final_res;
 }
 
-void Twitter::dump_state()
+void Twitter::dumpState()
 {
     std::cout << "Tweets:\n";
-    for (auto& tweetsById : tweet_map_)
+    for (auto& tweets_by_id : tweet_map_)
     {
-        std::cout << tweetsById.first << " : ";
-        for (auto& tweets : tweetsById.second)
+        std::cout << tweets_by_id.first << " : ";
+        for (auto& tweets : tweets_by_id.second)
             std::cout << "(" << tweets.id << "," << tweets.timestamp << ")"
                       << ", ";
         std::cout << "\n";
     }
     std::cout << "Users:\n";
-    for (auto& followerByUser : users_)
+    for (auto& follower_by_user : users_)
     {
-        std::cout << followerByUser.first << " : ";
-        for (auto& follower : followerByUser.second)
+        std::cout << follower_by_user.first << " : ";
+        for (auto& follower : follower_by_user.second)
             std::cout << follower << ", ";
         std::cout << "\n";
     }
