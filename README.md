@@ -4,8 +4,7 @@ a super simple version of Twitter.
 I wanted to push the exercise to the next level:
 - Adding benchmarking tool to evaluate the performance of the API
 - Have a fuzzing tool that evaluate the c++ version against a reference wrote in python
-- Make the library asynchonous
-- Package the API in a simple server.
+- Push the performance
 
 
 ## Getting Started
@@ -29,6 +28,15 @@ cmake ..
 make
 ```
 
+### Tools
+You can run some test generated tests using:
+```
+make check
+```
+You can run a benchmark that is just running the different function of the lib from a input file:
+```
+make bench
+```
 
 ## Authors
 
