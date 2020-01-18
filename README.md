@@ -1,5 +1,5 @@
 # Twitter 
-This project starts from a simple leetcode [exercise]{https://leetcode.com/problems/design-twitter/} where you need to create a simple API that "simulate" 
+This project starts from a simple leetcode [exercise](https://leetcode.com/problems/design-twitter/) where you need to create a simple API that "simulate" 
 a super simple version of Twitter.
 I wanted to push the exercise to the next level:
 - Adding benchmarking tool to evaluate the performance of the API
