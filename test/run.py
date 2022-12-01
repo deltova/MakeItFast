@@ -90,8 +90,6 @@ def test(actions=None):
             res = wrapper.exec(action)
             ref = res[1]
             tested = [elm for elm in res[0]]
-            if ref != tested:
-                import pdb; pdb.set_trace()
             assert ref == tested, (ref, tested)
         else:
             wrapper.exec(action)

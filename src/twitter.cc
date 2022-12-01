@@ -70,6 +70,7 @@ std::vector<unsigned int> Twitter::getNewsFeed(unsigned int user_id)
         }
     }
     std::vector<unsigned int> final_res; 
+    final_res.reserve(10);
     while (final_res.size() < 10 && !res.empty())
     {
         auto top = res.top();
